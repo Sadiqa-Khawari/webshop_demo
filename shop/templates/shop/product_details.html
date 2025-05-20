@@ -1,0 +1,13 @@
+<html>
+    <head>
+        <body>
+            <h2> {{ product.name }}</h2>
+            <p> {{ product.describtion }}</p>
+            <p>{{ product.total_price}} ALV {{product.tax}}</p>
+
+            <from action="{% url 'purchase_product' product.id %}">
+                <input type="submit" id ="submit-painike" value="lähetä tilaa"/>
+            </from>
+        </body>
+    </head>
+</html>
