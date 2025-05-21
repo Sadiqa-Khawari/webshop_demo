@@ -84,24 +84,24 @@ def purchase_product(request, pk):
             }
         ]
     }
-    hdrs = {'Content-Type' : 'application/json',}
+    headers = {'Content-Type' : 'application/json'}
     # Lähetetään pyyntö Vismalle
-    response = requests.post(url, headers=hdrs, data=json.dumps(payload))
+    response = requests.post(url, headers=headers, data=json.dumps(payload))
     print(response)
     print(response.json())
     target_url = "https://www.vismapay.com/pbwapi/token/" + response.json().get('token')
 
-    return redirect(target_url)
+    return redirect(target_url, {'order': order })
 
 def purchase_succeeded(request):
     return_code = int(request.GET.get('RETURN_CODE'))
-
+    print("testi?")
     if return_code == 0:
         print("Purchase succeeded")
         order_no = request.GET.get('ORDER_NUMBER')
         authcode_from_visma = request.GET.get('AUTHCODE')
         settled = request.GET.get('SETTLED')
-
+        print(order_no)
         str_for_auth = str(return_code) + "|" + order_no + "|" + settled
         print(str_for_auth)
 

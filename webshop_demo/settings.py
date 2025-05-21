@@ -31,8 +31,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-VISMA_API_KEY = os.getenv("VISMA_API_KEY")
-VISMA_SECRET_KEY = os.getenv("VISMA_SECRET_KEY")
+VISMA_API_KEY =os.getenv("VISMA_API_KEY")
+VISMA_SECRET_KEY =os.getenv("VISMA_SECRET_KEY")
 
 # Application definition
 
