@@ -20,4 +20,20 @@
                 {% endfor %}
         </form>
     </body>
+</html><html>
+    <head>
+    </head>
+    <body>
+   
+        <form method="POST">
+            {% csrf_token %}
+               {% for fm in form %}
+                    <label >{{fm.label}}</label>
+                    {{fm}}
+                    </br>
+                {% endfor %}
+            <button type="submit">REKISTERÖI KÄYTTÄJÄ</button>
+        </form>
+
+    </body>
 </html>

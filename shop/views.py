@@ -1,8 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
-
 from .models import Product, Order
-from .forms import UserRegisterForm
 from django.conf import settings
+from .forms import UserRegisterForm
 
 import requests
 import json
@@ -10,20 +9,21 @@ import random
 import hmac
 import hashlib
 
-# Creat your views here.
+
+
+# Create your views here.
 def register(request):
     if request.method == 'POST':
-        print("Uuden käyttäjän rekisteröinti")
         form = UserRegisterForm(request.POST)
-
         if form.is_valid():
-            print("testi1")
             form.save()
-            print("testi2")
             return redirect('product_list')
     else:
         form = UserRegisterForm()
-    return render(request, 'shop/register.html', {'form': form})
+
+    return render(request, 'shop/register_user.html', { 'form': form})
+
+
 
 def product_list(request):
     products = Product.objects.all()
@@ -42,7 +42,6 @@ def generate_authcode(msg: str) -> str:
     ).hexdigest().upper()
 
     return signature
- 
 
 
 def purchase_product(request, pk):
@@ -98,24 +97,24 @@ def purchase_product(request, pk):
             }
         ]
     }
-    headers = {'Content-Type' : 'application/json'}
+    hdrs = {'Content-Type' : 'application/json',}
     # Lähetetään pyyntö Vismalle
-    response = requests.post(url, headers=headers, data=json.dumps(payload))
+    response = requests.post(url, headers=hdrs, data=json.dumps(payload))
     print(response)
     print(response.json())
     target_url = "https://www.vismapay.com/pbwapi/token/" + response.json().get('token')
 
-    return redirect(target_url, {'order': order })
+    return redirect(target_url)
 
 def purchase_succeeded(request):
     return_code = int(request.GET.get('RETURN_CODE'))
-    print("testi?")
+
     if return_code == 0:
         print("Purchase succeeded")
         order_no = request.GET.get('ORDER_NUMBER')
         authcode_from_visma = request.GET.get('AUTHCODE')
         settled = request.GET.get('SETTLED')
-        print(order_no)
+
         str_for_auth = str(return_code) + "|" + order_no + "|" + settled
         print(str_for_auth)
 
@@ -129,7 +128,6 @@ def purchase_succeeded(request):
     context = { 'return_code': return_code }
 
     return render(request, 'shop/success.html', context)
-
 
 #"GET /purchase_succeeded
 # ?
