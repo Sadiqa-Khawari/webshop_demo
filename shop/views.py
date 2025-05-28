@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
+
 from .models import Product, Order
+from .forms import UserRegisterForm
 from django.conf import settings
 
 import requests
@@ -8,9 +10,20 @@ import random
 import hmac
 import hashlib
 
+# Creat your views here.
+def register(request):
+    if request.method == 'POST':
+        print("Uuden käyttäjän rekisteröinti")
+        form = UserRegisterForm(request.POST)
 
-
-# Create your views here.
+        if form.is_valid():
+            print("testi1")
+            form.save()
+            print("testi2")
+            return redirect('product_list')
+    else:
+        form = UserRegisterForm()
+    return render(request, 'shop/register.html', {'form': form})
 
 def product_list(request):
     products = Product.objects.all()
@@ -29,6 +42,7 @@ def generate_authcode(msg: str) -> str:
     ).hexdigest().upper()
 
     return signature
+ 
 
 
 def purchase_product(request, pk):
@@ -115,6 +129,7 @@ def purchase_succeeded(request):
     context = { 'return_code': return_code }
 
     return render(request, 'shop/success.html', context)
+
 
 #"GET /purchase_succeeded
 # ?
